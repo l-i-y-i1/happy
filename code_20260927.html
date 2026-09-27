@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>祝福便签</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background-color: #eee;
+            min-height:100vh;
+        }
+        #startBtn{
+            margin:40px;
+            font-size:22px;
+            padding:14px 30px;
+            cursor:pointer;
+        }
+        .note {
+            position: absolute;
+            width:150px;
+            height:80px;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-family:"微软雅黑",sans‑serif;
+            font-size:16px;
+            text-align:center;
+            box-shadow:2px 2px 7px #bbbbbb;
+            border-radius:5px;
+        }
+    </style>
+</head>
+<body>
+    <button id="startBtn">✨点击加载祝福便签</button>
+
+<script>
+// 文案（和python原版完全一样）
+const tips = [
+    "学业有成", "好好爱自己", "好好吃饭", "保持好心情",
+    "身体健康", "顺顺利利", "别熬夜", "天凉了多穿衣服",
+    "天天开心", "万事胜意", "平安喜乐", "心想事成",
+    "多喝水", "早点休息", "加油呀", "你超棒的",
+    "烦恼全消", "好运连连", "按时吃饭", "少玩手机"
+];
+//背景颜色列表
+const colors = [
+    "pink", "lightblue", "lightgreen", "lemonchiffon",
+    "hotpink", "skyblue", "palegreen", "lavender",
+    "peachpuff", "lightcyan", "honeydew", "mistyrose"
+];
+const POPUP_COUNT = 200;
+const WIN_WIDTH = 150;
+const WIN_HEIGHT = 80;
+
+//清空全部便签（按空格键）
+function clearAllNotes(){
+    document.querySelectorAll(".note").forEach(item=>item.remove());
+}
+
+//生成单张便签
+function createNote(){
+    const pageW = window.innerWidth;
+    const pageH = window.innerHeight;
+    let rx = Math.floor(Math.random() * (pageW - WIN_WIDTH));
+    let ry = Math.floor(Math.random() * (pageH - WIN_HEIGHT));
+    let bgColor = colors[Math.floor(Math.random()*colors.length)];
+    let text = tips[Math.floor(Math.random()*tips.length)];
+
+    let div = document.createElement("div");
+    div.classList.add("note");
+    div.style.left = rx + "px";
+    div.style.top = ry + "px";
+    div.style.backgroundColor = bgColor;
+    div.innerText = text;
+    document.body.appendChild(div);
+}
+
+//延时逐个生成便签，复刻原来动画效果
+function spawnLoop(remaining, delayMs=60){
+    if(remaining <=0) return;
+    createNote();
+    setTimeout(()=>{
+        spawnLoop(remaining - 1, delayMs);
+    }, delayMs);
+}
+
+//点击按钮开始生成
+document.getElementById("startBtn").addEventListener("click", ()=>{
+    spawnLoop(POPUP_COUNT);
+})
+
+//空格键清空所有卡片
+document.addEventListener("keydown", e=>{
+    if(e.code === "Space"){
+        clearAllNotes();
+    }
+})
+</script>
+</body>
+</html>
